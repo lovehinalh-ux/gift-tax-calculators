@@ -2,30 +2,52 @@ import { GiftTaxCalculator } from '@/components/calculators/GiftTaxCalculator'
 
 export default function GiftTaxPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col font-sans">
+    <div className="min-h-screen bg-secondary flex flex-col font-sans">
+      <header className="sticky top-0 z-50 bg-secondary/95 backdrop-blur-sm border-b border-orange-100 py-4 px-4 md:px-12 flex justify-between items-center w-full shadow-sm transition-all duration-300">
+        <div className="flex items-center gap-1 max-w-7xl mx-auto w-full justify-between">
+          <h1 className="text-xl md:text-2xl font-bold text-textMain tracking-tight">
+            Mr. Three 保險工具箱 | 贈與稅試算工具
+          </h1>
 
-      {/* Simple Modern Header */}
-      <header className="bg-white border-b border-border sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">
-              G
-            </div>
-            <h1 className="text-xl font-bold text-secondary tracking-tight">
-              贈與稅計算機
-            </h1>
+          <div className="flex items-center space-x-8 text-sm font-medium text-textMain">
+            <a
+              href="https://personal-intro-blue.zeabur.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary hover:bg-[#B06A25] text-white px-5 py-2 rounded shadow-sm transition-all transform hover:-translate-y-0.5 font-medium flex items-center gap-2"
+            >
+              <span>回到Mr. Three保險工具箱</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
           </div>
         </div>
       </header>
 
-      <main className="flex-grow w-full max-w-7xl mx-auto px-6 py-10">
+      <main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-12 py-12 mobile-summary-spacer">
+        <div className="text-center mb-12">
+          <span className="text-primary font-bold tracking-wider uppercase text-sm mb-3 block">
+            專業工具庫
+          </span>
+          <h1 className="text-3xl md:text-4xl font-bold text-textMain mb-4">
+            贈與稅試算工具 - 2026最新版
+          </h1>
+          <p className="text-gray-500 max-w-2xl mx-auto text-base md:text-lg">
+            依據 民國114年(2025) 最新稅法，協助您快速試算本次贈與應納稅額。
+            <br className="hidden md:inline" />
+            透過右側即時試算面板，精準掌握課稅淨額與預估稅負。
+          </p>
+        </div>
+
         <GiftTaxCalculator />
       </main>
 
-      <footer className="py-8 text-center text-muted text-sm border-t border-border mt-12 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <p>&copy; 2025 Gift Tax Calculator. All rights reserved.</p>
-        </div>
+      <footer className="py-8 text-center text-gray-400 text-sm border-t border-gray-200/50 mt-12">
+        <p>&copy; 2024 Mr. Three 保險工具箱. All rights reserved.</p>
+        <p className="mt-2 text-xs">本試算結果僅供參考，實際稅額以國稅局核定為準。</p>
       </footer>
     </div>
   )

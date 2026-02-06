@@ -1,62 +1,53 @@
-/**
- * Gift Tax Calculator Main Component
- * 贈與稅計算機主組件
- */
-
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useMemo, useState } from 'react'
+import { calculateGiftTax } from '@/lib/calculators/gift-tax'
+import { parseWanInput } from '@/lib/utils/format'
 import { GiftTaxForm } from './GiftTaxForm'
 import { GiftTaxSidebar } from './GiftTaxSidebar'
-import { calculateGiftTax } from '@/lib/calculators/gift-tax'
-import { giftTaxInputSchema } from '@/lib/calculators/gift-tax.schema'
+import { TaxBracketTable } from './TaxBracketTable'
 
-/**
- * Main gift tax calculator component
- * 主贈與稅計算機組件
- *
- * Orchestrates input, calculation, and result display
- * 統籌輸入、計算與結果顯示
- */
 export function GiftTaxCalculator() {
-  const [giftAmount, setGiftAmount] = useState(0)
-  const [validationError, setValidationError] = useState<string | undefined>()
+  const [inputWan, setInputWan] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
 
-  const handleAmountChange = useCallback((value: number) => {
-    setGiftAmount(value)
+  const parsedWan = useMemo(() => parseWanInput(inputWan), [inputWan])
 
-    const validation = giftTaxInputSchema.safeParse({ giftAmount: value })
-    if (!validation.success) {
-      const firstError = validation.error.issues[0]
-      setValidationError(firstError?.message)
-    } else {
-      setValidationError(undefined)
+  const error = useMemo(() => {
+    if (inputWan.trim().length === 0) {
+      return undefined
     }
-  }, [])
+    return parsedWan === null ? '請輸入有效的萬元金額（不可為負數）' : undefined
+  }, [inputWan, parsedWan])
 
   const result = useMemo(() => {
-    if (validationError || giftAmount <= 0) {
+    if (parsedWan === null) {
       return null
     }
+    const giftAmount = Math.floor(parsedWan * 10000)
     return calculateGiftTax({ giftAmount })
-  }, [giftAmount, validationError])
+  }, [parsedWan])
+
+  const handleChange = (value: string) => {
+    setInputWan(value)
+    setIsUpdating(true)
+    window.setTimeout(() => setIsUpdating(false), 280)
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      {/* Left Column: Form Section */}
-      <div className="lg:col-span-7 xl:col-span-8 transition-all duration-500 ease-in-out">
+      <div className="lg:col-span-8 space-y-6">
         <GiftTaxForm
-          giftAmount={giftAmount}
-          onAmountChange={handleAmountChange}
-          error={validationError}
+          inputWan={inputWan}
+          onInputChange={handleChange}
+          onQuickPick={handleChange}
+          error={error}
         />
+        <TaxBracketTable />
       </div>
 
-      {/* Right Column: Sticky Sidebar (Result + Table) */}
-      <div className="lg:col-span-5 xl:col-span-4 transition-all duration-500 ease-in-out">
-        <div className="sticky top-8">
-          <GiftTaxSidebar result={result} />
-        </div>
+      <div className="lg:col-span-4">
+        <GiftTaxSidebar result={result} isUpdating={isUpdating} />
       </div>
     </div>
   )
