@@ -11,7 +11,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "predeploy:check": "bash ./scripts/predeploy-check.sh"
   },
   "keywords": [],
   "author": "",
