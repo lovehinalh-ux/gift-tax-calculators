@@ -37,6 +37,8 @@ Before clicking deploy, verify:
 - Source branch is `main`
 - Commit hash shown in Zeabur equals latest `origin/main`
 - If not, trigger redeploy after refreshing the repository state
+- Build command uses webpack fallback: `npm run build` (mapped to `next build --webpack`)
+  - Reason: avoid Turbopack-specific build instability on some CI/deploy environments
 
 ## Recommended command sequence
 
