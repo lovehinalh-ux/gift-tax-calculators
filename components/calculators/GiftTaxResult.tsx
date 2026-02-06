@@ -1,128 +1,48 @@
-/**
- * Gift Tax Result Component
- * 贈與稅計算結果組件
- */
-
 'use client'
 
 import type { GiftTaxResult } from '@/lib/calculators/gift-tax.types'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { formatCurrency, formatPercentage } from '@/lib/utils/format'
 
 interface GiftTaxResultProps {
   readonly result: GiftTaxResult
+  readonly isUpdating: boolean
 }
 
-interface ResultRowProps {
-  readonly label: string
-  readonly value: string | number
-  readonly highlight?: boolean
-  readonly large?: boolean
-  readonly small?: boolean
-  readonly formula?: boolean
-}
-
-function ResultRow({ label, value, highlight, large, small, formula }: ResultRowProps) {
+function Row({ label, value, isTax = false }: { label: string; value: string; isTax?: boolean }) {
   return (
-    <div className="flex justify-between items-center py-2">
-      <span
-        className={`${small ? 'text-sm' : 'text-base'} ${
-          highlight ? 'font-semibold text-neutral-900' : 'text-neutral-700'
-        }`}
-      >
-        {label}
-      </span>
-      <span
-        className={`${small ? 'text-sm' : large ? 'text-xl' : 'text-base'} ${
-          highlight ? 'font-bold text-primary-600' : formula ? 'text-neutral-600 font-mono' : 'text-neutral-800'
-        }`}
-      >
-        {value}
-      </span>
+    <div className="flex justify-between items-center py-1">
+      <span className="text-gray-600 text-base">▸ {label}</span>
+      <span className={isTax ? 'text-primary font-bold text-lg' : 'text-textMain font-medium text-lg'}>{value}</span>
     </div>
   )
 }
 
-/**
- * Display detailed calculation results with breakdown
- * 顯示詳細的計算結果與明細
- */
-export function GiftTaxResultDisplay({ result }: GiftTaxResultProps) {
-  const {
-    giftAmount,
-    taxFreeAmount,
-    taxableNetAmount,
-    applicableBracket,
-    taxBeforeDeduction,
-    progressiveDifference,
-    finalTax,
-    effectiveRate,
-  } = result
-
-  const ratePercent = applicableBracket ? formatPercentage(applicableBracket.rate, 0) : '-'
-
+export function GiftTaxResultDisplay({ result, isUpdating }: GiftTaxResultProps) {
   return (
-    <Card variant="elevated">
-      <CardHeader>
-        <CardTitle>計算結果</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-1">
-          <ResultRow label="贈與總額" value={`NT$ ${formatCurrency(giftAmount)}`} />
-          <ResultRow label="免稅額" value={`- NT$ ${formatCurrency(taxFreeAmount)}`} />
+    <div className="space-y-4">
+      <Row label="本次贈與總額" value={`$${formatCurrency(result.giftAmount)}`} />
+      <div className="flex justify-between items-center py-1 text-[#10b981] font-medium">
+        <span className="text-base">▸ 扣除免稅額</span>
+        <span className="text-lg">-${formatCurrency(result.taxFreeAmount)}</span>
+      </div>
+      <Row label="課稅贈與淨額" value={`$${formatCurrency(result.taxableNetAmount)}`} />
+      <Row label="適用稅率" value={formatPercentage(result.appliedRate)} />
+      <Row label="累進差額" value={`$${formatCurrency(result.progressiveDifference)}`} />
 
-          <hr className="my-3 border-neutral-200" />
-
-          <ResultRow label="應稅淨額" value={`NT$ ${formatCurrency(taxableNetAmount)}`} highlight />
-
-          {applicableBracket && (
-            <>
-              <ResultRow label="適用稅率" value={ratePercent} />
-
-              <ResultRow
-                label="稅額計算"
-                value={`${formatCurrency(taxableNetAmount)} × ${ratePercent}`}
-                formula
-                small
-              />
-
-              <ResultRow label="稅額小計" value={`NT$ ${formatCurrency(taxBeforeDeduction)}`} small />
-
-              <ResultRow
-                label="累進差額"
-                value={`- NT$ ${formatCurrency(progressiveDifference)}`}
-                small
-              />
-            </>
-          )}
-
-          <hr className="my-3 border-neutral-200" />
-
-          <div className="py-3 px-4 bg-primary-50 rounded-lg mt-4">
-            <ResultRow label="應納贈與稅額" value={`NT$ ${formatCurrency(finalTax)}`} highlight large />
-          </div>
-
-          <ResultRow label="實質稅率" value={formatPercentage(effectiveRate, 2)} small />
+      <div className={`bg-[#FAF5EF] -mx-6 md:-mx-8 px-6 md:px-8 py-4 mt-4 border-t border-b border-orange-100 tax-result ${isUpdating ? 'updating' : ''}`}>
+        <div className="flex flex-col items-center justify-center text-[#d97706]">
+          <span className="font-bold text-xl mb-1">本次應納贈與稅額</span>
+          <span className="font-bold" style={{ fontSize: '2.125rem' }}>
+            ${formatCurrency(result.finalTax)}
+          </span>
         </div>
+      </div>
 
-        {finalTax === 0 && (
-          <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-            <p className="text-sm text-green-800">
-              <span className="font-semibold">✓ </span>
-              此贈與金額未超過免稅額，無需繳納贈與稅。
-            </p>
-          </div>
-        )}
+      <div className="p-3 bg-gray-50 rounded text-sm text-gray-500 leading-relaxed">
+        <span className="font-bold text-gray-600">提醒：</span>
+        本試算採用「本次贈與」口徑，僅供規劃參考，實際仍以國稅局核定為準。
+      </div>
 
-        {finalTax > 0 && (
-          <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
-            <p className="text-sm text-amber-800">
-              <span className="font-semibold">ℹ️ 注意：</span>
-              此計算結果僅供參考，實際應納稅額請以國稅局核定為準。
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    </div>
   )
 }
