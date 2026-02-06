@@ -30,6 +30,17 @@ describe('gift tax calculation', () => {
     expect(result.appliedRate).toBe(0.2)
   })
 
+  it('applies floor rounding for tax amount', () => {
+    const result = calcFromWan(244.0001)
+    expect(result.taxableNetAmount).toBe(1)
+    expect(result.finalTax).toBe(0)
+  })
+
+  it('keeps effective rate at zero when gift amount is zero', () => {
+    const result = calculateGiftTax({ giftAmount: 0 })
+    expect(result.effectiveRate).toBe(0)
+  })
+
   it('never produces negative tax', () => {
     const result = calcFromWan(10)
     expect(result.finalTax).toBeGreaterThanOrEqual(0)
