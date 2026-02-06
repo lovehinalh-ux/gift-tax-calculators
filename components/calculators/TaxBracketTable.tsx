@@ -15,8 +15,8 @@ export function TaxBracketTable() {
   return (
     <Card variant="bordered">
       <CardHeader>
-        <CardTitle>贈與稅稅率表（114年1月1日起適用）</CardTitle>
-        <p className="text-sm text-neutral-600 mt-2">
+        <CardTitle className="text-secondary">贈與稅稅率表（114年1月1日起適用）</CardTitle>
+        <p className="text-sm text-muted mt-2">
           累進稅率說明：應納稅額 = (應稅淨額 × 稅率) - 累進差額
         </p>
       </CardHeader>
@@ -24,14 +24,14 @@ export function TaxBracketTable() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-neutral-50 border-b-2 border-neutral-200">
-                <th className="text-left py-3 px-4 font-semibold text-neutral-700">
+              <tr className="bg-background border-b-2 border-border">
+                <th className="text-left py-3 px-4 font-semibold text-secondary">
                   贈與淨額（元）
                 </th>
-                <th className="text-center py-3 px-4 font-semibold text-neutral-700">
+                <th className="text-center py-3 px-4 font-semibold text-secondary">
                   稅率
                 </th>
-                <th className="text-right py-3 px-4 font-semibold text-neutral-700">
+                <th className="text-right py-3 px-4 font-semibold text-secondary">
                   累進差額（元）
                 </th>
               </tr>
@@ -40,16 +40,16 @@ export function TaxBracketTable() {
               {TAX_BRACKETS.map((bracket, index) => (
                 <tr
                   key={index}
-                  className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors"
+                  className="border-b border-border hover:bg-background/80 transition-colors"
                 >
-                  <td className="py-3 px-4 text-neutral-800">
+                  <td className="py-3 px-4 text-secondary">
                     {bracket.maxAmount === null ? (
                       <>
-                        {formatCurrency(bracket.minAmount)} <span className="text-neutral-500">以上</span>
+                        {formatCurrency(bracket.minAmount)} <span className="text-muted">以上</span>
                       </>
                     ) : index === 0 ? (
                       <>
-                        {formatCurrency(bracket.maxAmount)} <span className="text-neutral-500">以下</span>
+                        {formatCurrency(bracket.maxAmount)} <span className="text-muted">以下</span>
                       </>
                     ) : (
                       <>
@@ -57,10 +57,10 @@ export function TaxBracketTable() {
                       </>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-center font-semibold text-primary-600">
+                  <td className="py-3 px-4 text-center font-semibold text-primary">
                     {formatPercentage(bracket.rate, 0)}
                   </td>
-                  <td className="py-3 px-4 text-right text-neutral-800">
+                  <td className="py-3 px-4 text-right text-secondary">
                     {formatCurrency(bracket.progressiveDifference)}
                   </td>
                 </tr>
@@ -69,8 +69,8 @@ export function TaxBracketTable() {
           </table>
         </div>
 
-        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-800">
+        <div className="mt-4 p-4 bg-background/50 rounded-lg border border-border">
+          <p className="text-sm text-muted">
             <span className="font-semibold">💡 說明：</span>
             免稅額為 2,440,000 元，超過免稅額的部分才需要課徵贈與稅。
           </p>

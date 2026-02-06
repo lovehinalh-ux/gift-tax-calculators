@@ -1,12 +1,13 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, forwardRef, useState } from 'react'
 import { cn } from '@/lib/utils/cn'
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   label?: string
   error?: string
   helperText?: string
   isValid?: boolean
   fullWidth?: boolean
+  onChange: (val: string) => void
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -19,86 +20,79 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       isValid,
       fullWidth = true,
       id,
+      onChange,
+      value,
+      placeholder,
+      onFocus,
+      onBlur,
       ...props
     },
     ref
   ) => {
+    const [isFocused, setIsFocused] = useState(false)
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-')
+    // If value is present (even if 0), or if focused, the label should float.
+    const isFloating = isFocused || (value !== '' && value !== undefined && value !== null)
 
     return (
-      <div className={cn('flex flex-col gap-1.5', fullWidth && 'w-full')}>
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium text-neutral-700"
-          >
-            {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-        )}
+      <div className={cn('flex flex-col gap-1', fullWidth && 'w-full', className)}>
+        <div className="relative pt-2">
+          {/* Floating Label */}
+          {label && (
+            <label
+              htmlFor={inputId}
+              className={cn(
+                'absolute left-4 transition-all duration-200 pointer-events-none z-10',
+                isFloating
+                  ? '-top-0.5 text-xs text-primary font-bold bg-white px-1' // Float up
+                  : 'top-3.5 text-base text-secondary/50 font-medium' // Normal placeholder position
+              )}
+            >
+              {label}
+            </label>
+          )}
 
-        <div className="relative">
           <input
             ref={ref}
             id={inputId}
+            type="number"
+            value={value}
             className={cn(
-              'w-full px-4 py-3 border rounded-lg transition-all duration-200',
-              'focus:outline-none focus:ring-2 focus:ring-offset-0',
-              'disabled:bg-neutral-100 disabled:cursor-not-allowed',
-              // 預設狀態
-              !error && !isValid && 'border-neutral-300 focus:ring-primary-500 focus:border-primary-500',
-              // 錯誤狀態
-              error && 'border-red-500 focus:ring-red-500 focus:border-red-500 pr-10',
-              // 成功狀態
-              isValid && !error && 'border-green-500 focus:ring-green-500 focus:border-green-500 pr-10',
-              className
+              'shadow-sm appearance-none border border-border bg-white rounded-xl w-full py-3 px-4 text-secondary leading-tight',
+              'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all',
+              'placeholder-transparent', // Hide standard placeholder to let label act as one if needed
+              error && 'border-red-500 focus:ring-red-500/20 focus:border-red-500',
+              isValid && !error && 'border-green-500 focus:ring-green-500/20 focus:border-green-500',
             )}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={(e) => {
+              setIsFocused(true)
+              onFocus?.(e)
+            }}
+            onBlur={(e) => {
+              setIsFocused(false)
+              onBlur?.(e)
+            }}
+            placeholder={label} // Required for some accessibility, but hidden visually via CSS
             {...props}
           />
 
-          {/* 驗證圖示 */}
-          {error && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg
-                className="h-5 w-5 text-red-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          )}
-
-          {isValid && !error && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg
-                className="h-5 w-5 text-green-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          )}
+          {/* Suffix Icon / Text - NT$ */}
+          <span className="absolute right-4 top-3.5 text-secondary/40 font-bold text-sm pointer-events-none">
+            NT$
+          </span>
         </div>
 
-        {/* 錯誤訊息或輔助文字 */}
+        {/* Error Message */}
         {error && (
-          <p className="text-sm text-red-500 animate-in fade-in duration-200">
-            {error}
+          <p className="text-xs text-red-500 mt-1 font-medium ml-1">
+            * {error}
           </p>
         )}
 
+        {/* Helper Text */}
         {!error && helperText && (
-          <p className="text-sm text-neutral-500">{helperText}</p>
+          <p className="text-xs text-muted mt-1 ml-1">{helperText}</p>
         )}
       </div>
     )

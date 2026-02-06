@@ -20,9 +20,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     ref
   ) => {
     const variants = {
-      default: 'bg-white rounded-card shadow-card',
-      bordered: 'bg-white rounded-card border-2 border-neutral-200',
-      elevated: 'bg-white rounded-card shadow-lg',
+      default: 'bg-surface border border-border/60 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]',
+      bordered: 'bg-surface rounded-card border-2 border-border',
+      elevated: 'bg-surface rounded-card shadow-lg',
     }
 
     const paddings = {
