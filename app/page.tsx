@@ -63,8 +63,8 @@ export default function GiftTaxPage() {
           <div className="flex items-center space-x-8 text-sm font-medium text-textMain">
             <a
               href="https://personal-intro-blue.zeabur.app/"
-              target="_blank"
-              rel="noopener noreferrer"
+             
+             
               className="bg-primary hover:bg-[#B06A25] text-white px-5 py-2 rounded shadow-sm transition-all transform hover:-translate-y-0.5 font-medium flex items-center gap-2"
             >
               <span>回到Mr. Three保險工具箱</span>
