@@ -17,6 +17,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', 'sans-serif'],
+        serif: ['DM Serif Display', 'Georgia', 'serif'],
       },
       boxShadow: {
         card: '0 8px 24px -12px rgba(74, 59, 50, 0.25)',
