@@ -58,13 +58,13 @@ export default function GiftTaxPage() {
         <div className="flex items-center gap-1 max-w-7xl mx-auto w-full justify-between">
           <div className="flex items-center gap-3">
             <div
-              style={{ fontFamily: '"DM Serif Display", Georgia, serif', background: '#9E741C' }}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+              style={{ background: '#9E741C' }}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 font-serif"
             >
               3
             </div>
             <div>
-              <div style={{ fontFamily: '"DM Serif Display", Georgia, serif' }} className="text-base font-bold text-white leading-tight">Mr. Three</div>
+              <div className="text-base font-bold text-white leading-tight font-serif">Mr. Three</div>
               <div className="text-xs leading-none" style={{ color: 'rgba(255,255,255,0.45)' }}>贈與稅計算機</div>
             </div>
           </div>
