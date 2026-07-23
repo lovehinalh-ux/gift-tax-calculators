@@ -70,7 +70,7 @@ export default function GiftTaxPage() {
           </div>
 
           <a
-            href="https://personal-intro-blue.zeabur.app/"
+            href="https://personal-one-page-blue-pro-type.lovehinalh.workers.dev/"
             className="text-white px-5 py-2 rounded-lg shadow-sm transition-all font-medium flex items-center gap-2 text-sm"
             style={{ background: '#9E741C' }}
           >

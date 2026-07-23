@@ -3,12 +3,11 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   /* 基本配置 */
   reactStrictMode: true,
-  turbopack: {
-    root: '/Users/leonchen/.gemini/antigravity/scratch/gift-tax-calculators',
-  },
+  output: 'export',
 
   /* 圖片優化 */
   images: {
+    unoptimized: true,
     formats: ['image/webp', 'image/avif'],
     remotePatterns: [],
   },
